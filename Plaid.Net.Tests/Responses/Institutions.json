@@ -1,0 +1,267 @@
+﻿[
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Online ID"
+    },
+    "has_mfa": true,
+    "id": "5301a93ac140de84910000e0",
+    "mfa": [
+      "code",
+      "list",
+      "questions(3)"
+    ],
+    "name": "Bank of America",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "bofa"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": true,
+    "id": "5301a99504977c52b60000d0",
+    "mfa": [
+      "code",
+      "list"
+    ],
+    "name": "Chase",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "chase"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Username"
+    },
+    "has_mfa": false,
+    "id": "5301aa096b3f822b440001cb",
+    "mfa": [],
+    "name": "Wells Fargo",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "wells"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": true,
+    "id": "5301aa306b3f82a00500018b",
+    "mfa": [
+      "questions",
+      "selections"
+    ],
+    "name": "Citi",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "citi"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Personal ID"
+    },
+    "has_mfa": true,
+    "id": "531ea6327de8211c80000440",
+    "mfa": [
+      "questions(3)"
+    ],
+    "name": "US Bank",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "us"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "pin": "PIN",
+      "username": "Online ID"
+    },
+    "has_mfa": true,
+    "id": "531ea6602ad939b68700047c",
+    "mfa": [
+      "questions(3)"
+    ],
+    "name": "USAA",
+    "products": [
+      "connect",
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "usaa"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Username or Customer Number"
+    },
+    "has_mfa": true,
+    "id": "53c5c8631f9bda09c7000222",
+    "mfa": [
+      "questions(3)"
+    ],
+    "name": "Capital One 360",
+    "products": [
+      "auth",
+      "balance"
+    ],
+    "type": "capone360"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": false,
+    "id": "5301a9d704977c52b60000db",
+    "mfa": [],
+    "name": "American Express",
+    "products": [
+      "connect",
+      "balance"
+    ],
+    "type": "amex"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Login ID"
+    },
+    "has_mfa": false,
+    "id": "53b34fab1a73941962000186",
+    "mfa": [],
+    "name": "Charles Schwab",
+    "products": [
+      "auth",
+      "balance"
+    ],
+    "type": "schwab"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Username"
+    },
+    "has_mfa": false,
+    "id": "53cee1d8c003c2747b000051",
+    "mfa": [],
+    "name": "Fidelity",
+    "products": [
+      "auth",
+      "balance"
+    ],
+    "type": "fidelity"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": true,
+    "id": "54acb2eb9d5b8617e0d5aa86",
+    "mfa": [
+      "questions(3)"
+    ],
+    "name": "PNC",
+    "products": [
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "pnc"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": false,
+    "id": "54dd7c23b237e70e61c3cb08",
+    "mfa": [],
+    "name": "Silicon Valley Bank",
+    "products": [
+      "auth",
+      "balance",
+      "connect"
+    ],
+    "type": "svb"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User Name"
+    },
+    "has_mfa": true,
+    "id": "55ccd367d32f2fdf19c1c448",
+    "mfa": [
+      "questions(3)"
+    ],
+    "name": "TD Bank",
+    "products": [
+      "auth",
+      "balance",
+      "info"
+    ],
+    "type": "td"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "Access Number"
+    },
+    "has_mfa": false,
+    "id": "55f071ac7a1c8e1bd752e54e",
+    "mfa": [],
+    "name": "Navy Federal Credit Union",
+    "products": [
+      "auth",
+      "balance",
+      "connect",
+      "info"
+    ],
+    "type": "nfcu"
+  },
+  {
+    "credentials": {
+      "password": "Password",
+      "username": "User ID"
+    },
+    "has_mfa": false,
+    "id": "55fa106813c81cf103e9e093",
+    "mfa": [],
+    "name": "SunTrust",
+    "products": [
+      "auth",
+      "balance",
+      "connect",
+      "info"
+    ],
+    "type": "suntrust"
+  }
+]

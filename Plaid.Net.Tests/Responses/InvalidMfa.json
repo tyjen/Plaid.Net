@@ -1,0 +1,6 @@
+﻿{
+  "code": 1203,
+  "message": "invalid mfa",
+  "resolve": "The MFA response provided was not correct.",
+  "access_token": "test_citi"
+}

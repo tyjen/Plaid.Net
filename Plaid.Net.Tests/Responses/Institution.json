@@ -1,0 +1,19 @@
+﻿{
+  "credentials": {
+    "password": "Password",
+    "username": "Personal ID"
+  },
+  "has_mfa": true,
+  "id": "531ea6327de8211c80000440",
+  "mfa": [
+    "questions(3)"
+  ],
+  "name": "US Bank",
+  "products": [
+    "connect",
+    "auth",
+    "balance",
+    "info"
+  ],
+  "type": "us"
+}

@@ -1,0 +1,8 @@
+﻿{
+  "id": "10001000",
+  "hierarchy": [
+    "Bank Fees",
+    "Overdraft"
+  ],
+  "type": "special"
+}

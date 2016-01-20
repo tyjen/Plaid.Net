@@ -1,0 +1,6 @@
+﻿{
+  "code": 1105,
+  "message": "bad access_token",
+  "resolve": "This access_token appears to be corrupted.",
+  "access_token": "test_bad"
+}

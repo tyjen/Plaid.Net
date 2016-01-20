@@ -1,0 +1,5 @@
+﻿{
+  "code": 1209,
+  "message": "invalid pin",
+  "resolve": "The pin provided was not correct."
+}

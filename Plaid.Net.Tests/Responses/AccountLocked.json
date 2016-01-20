@@ -1,0 +1,5 @@
+﻿{
+  "code": 1205,
+  "message": "account locked",
+  "resolve": "The account is locked. Prompt the user to visit the issuing institution's site and unlock their account."
+}

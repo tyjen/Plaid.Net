@@ -1,0 +1,4 @@
+﻿{
+  "access_token": "foobar_plaid_access_token",
+  "stripe_bank_account_token": "foobar_stripe_bank_account_token"
+}

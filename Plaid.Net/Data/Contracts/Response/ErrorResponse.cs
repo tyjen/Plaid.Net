@@ -1,9 +1,9 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using System.Net;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// The error response object returned from Plaid.

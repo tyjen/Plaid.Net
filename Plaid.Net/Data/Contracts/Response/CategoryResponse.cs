@@ -1,8 +1,8 @@
-﻿namespace Plaid.Net.Data.Contracts.Response
+﻿namespace Plaid.Net.Contracts.Response
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     internal class CategoryResponse
     {

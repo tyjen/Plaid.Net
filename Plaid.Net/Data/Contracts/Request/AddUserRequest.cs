@@ -1,9 +1,7 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
-    using System.Security;
     using Newtonsoft.Json;
-    using Tyjen.Net.Core.Extensions;
 
     /// <summary>
     /// Request object to add a new user.

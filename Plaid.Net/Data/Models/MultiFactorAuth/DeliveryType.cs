@@ -1,10 +1,10 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
-    using Tyjen.Net.Core.Identifiers;
+    using Plaid.Net.Utilities;
 
     /// <summary>
-    /// Identifier for the different delivery types for <see cref="CodeOption"/> multi-factor auth.
+    /// Identifier for the different delivery types for <see cref="CodeDeliveryOption"/> multi-factor auth.
     /// </summary>
     public class DeliveryType : StringIdentifier
     {

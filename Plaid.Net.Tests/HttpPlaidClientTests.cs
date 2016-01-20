@@ -1,13 +1,14 @@
 ﻿namespace Plaid.Net.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using Plaid.Net.Data.Models;
-    using Tyjen.Net.Core.Extensions;
+    using Plaid.Net.Models;
+    using Plaid.Net.Models.Results;
     using Tyjen.Net.Http;
 
     /// <summary>
@@ -178,13 +179,13 @@
             Assert.IsTrue(result.IsMfaRequired);
 
             Assert.AreEqual(AuthType.Selection, result.AuthPrompt.AuthType);
-            Assert.IsNotNull(result.AuthPrompt.SelectionOptions);
-            Assert.AreEqual(2, result.AuthPrompt.SelectionOptions.Count);
+            Assert.IsNotNull(result.AuthPrompt.MultipleChoiceQuestions);
+            Assert.AreEqual(2, result.AuthPrompt.MultipleChoiceQuestions.Count);
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AuthPrompt.SelectionOptions[0].Question));
-            Assert.AreEqual(2, result.AuthPrompt.SelectionOptions[0].Options.Count);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AuthPrompt.SelectionOptions[1].Question));
-            Assert.AreEqual(2, result.AuthPrompt.SelectionOptions[1].Options.Count);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AuthPrompt.MultipleChoiceQuestions[0].Question));
+            Assert.AreEqual(2, result.AuthPrompt.MultipleChoiceQuestions[0].Options.Count);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AuthPrompt.MultipleChoiceQuestions[1].Question));
+            Assert.AreEqual(2, result.AuthPrompt.MultipleChoiceQuestions[1].Options.Count);
         }
 
         [TestMethod]
@@ -193,7 +194,7 @@
             IHttpClientWrapper httpClient = this.GetMockHttpClient("AuthUserUsBank.json", HttpStatusCode.OK, HttpMethod.Post, "connect/step");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
             AccessToken token = new AccessToken("test_us");
-            AddUserResult result = await testClient.AuthenticateUserAsync(token, false, "tomato");
+            AddUserResult result = await testClient.AuthenticateUserAsync(token, false, ApiType.Connect, "tomato");
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
@@ -207,7 +208,7 @@
             IHttpClientWrapper httpClient = this.GetMockHttpClient("QuestionMfa.json", HttpStatusCode.Created, HttpMethod.Post, "connect/step");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);testClient = this.GetPlaidClient(httpClient);
             AccessToken token = new AccessToken("test_us");
-            AddUserResult result = await testClient.AuthenticateUserAsync(token, false, "again");
+            AddUserResult result = await testClient.AuthenticateUserAsync(token, false, ApiType.Connect, "again");
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
@@ -218,7 +219,7 @@
 
             httpClient = this.GetMockHttpClient("AuthUserUsBank.json", HttpStatusCode.OK, HttpMethod.Post, "connect/step");
             testClient = this.GetPlaidClient(httpClient);
-            result = await testClient.AuthenticateUserAsync(token, false, "tomato");
+            result = await testClient.AuthenticateUserAsync(token, false, mfaValues: "tomato");
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
@@ -231,7 +232,7 @@
         {
             IHttpClientWrapper httpClient = this.GetMockHttpClient("DeviceCodeMfa.json", HttpStatusCode.Created, HttpMethod.Post, "connect/step");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
-            AddUserResult result = await testClient.AuthenticateUserAsync("xxx-xxx-5309", new AccessToken("test_chase"));
+            AddUserResult result = await testClient.AuthenticateUserAsync(new AccessToken("test_chase"), "xxx-xxx-5309");
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
@@ -263,7 +264,7 @@
         {
             IHttpClientWrapper httpClient = this.GetMockHttpClient("AuthUserCiti.json", HttpStatusCode.OK, HttpMethod.Post, "connect/step");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
-            AddUserResult result = await testClient.AuthenticateUserAsync(new AccessToken("test_citi"), false, "tomato", "ketchup");
+            AddUserResult result = await testClient.AuthenticateUserAsync(new AccessToken("test_citi"), false, ApiType.Connect, "tomato", "ketchup");
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
@@ -276,7 +277,7 @@
         {
             IHttpClientWrapper httpClient = this.GetMockHttpClient("InvalidMfa.json", HttpStatusCode.PaymentRequired, HttpMethod.Post, "connect/step");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
-            AddUserResult result = await testClient.AuthenticateUserAsync(new AccessToken("test_citi"), false, "tomato");
+            AddUserResult result = await testClient.AuthenticateUserAsync(new AccessToken("test_citi"), false, ApiType.Connect, "tomato");
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.IsError);
@@ -516,7 +517,7 @@
             httpClient = this.GetMockHttpClient("AddUserSuccess.json", HttpStatusCode.OK, new HttpMethod("PATCH"), "connect/step");
             testClient = this.GetPlaidClient(httpClient);
 
-            result = await testClient.AuthenticateUserAsync(new AccessToken("test_usaa"), true, "tomato");
+            result = await testClient.AuthenticateUserAsync(new AccessToken("test_usaa"), true, ApiType.Connect, "tomato");
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsFalse(result.IsMfaRequired);
@@ -655,6 +656,70 @@
             Assert.IsNotNull(result.AccessToken);
             Assert.AreEqual("foobar_plaid_access_token", result.AccessToken.Value);
             Assert.AreEqual("foobar_stripe_bank_account_token", result.BankAccountToken);
+        }
+
+        [TestMethod]
+        public async Task ExchangeTokenFailed()
+        {
+            IHttpClientWrapper httpClient = this.GetMockHttpClient("InvalidCredentials.json", HttpStatusCode.Unauthorized, HttpMethod.Post, "exchange_token");
+            IPlaidClient testClient = this.GetPlaidClient(httpClient);
+            TokenExchangeResult result = await testClient.ExchangeBankTokenAsync("test_public_token", "test_account_id");
+
+            Assert.IsNull(result.AccessToken);
+            Assert.IsNull(result.BankAccountToken);
+            Assert.IsTrue(result.IsError);
+
+            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual(401, result.Exception.HttpStatusCode);
+            Assert.AreEqual(ErrorCode.InvalidCredentials, result.Exception.ErrorCode);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Exception.Message));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Exception.Resolution));
+        }
+
+        [TestMethod]
+        public async Task GetAuthAccountSuccess()
+        {
+            IHttpClientWrapper httpClient = this.GetMockHttpClient("AuthUserUsBank.json", HttpStatusCode.OK, HttpMethod.Get, "auth/get");
+            IPlaidClient testClient = this.GetPlaidClient(httpClient);
+
+            PlaidResult<IList<Account>> result = await testClient.GetAuthAccountDataAsync(new AccessToken("test_wells"));
+
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Value);
+
+            Assert.AreEqual(4, result.Value.Count);
+
+            Account account = result.Value[0];
+            Assert.AreEqual("QPO8Jo8vdDHMepg41PBwckXm4KdK1yUdmXOwK", account.Id);
+            Assert.AreEqual("KdDjmojBERUKx3JkDd9RuxA5EvejA4SENO4AA", account.ItemId);
+            Assert.AreEqual("eJXpMzpR65FP4RYno6rzuA7OZjd9n3Hna0RYa", account.UserId);
+            Assert.AreEqual(1203.42, account.AvailableBalance);
+            Assert.AreEqual(1274.93, account.CurrentBalance);
+            Assert.AreEqual(new InstitutionType("fake_institution"), account.InstitutionType);
+            Assert.AreEqual(AccountType.Depository, account.AccountType);
+            Assert.AreEqual(AccountSubType.Savings, account.AccountSubtype);
+            Assert.IsNotNull(account.Metadata);
+            Assert.AreEqual("Plaid Savings", account.Metadata["name"]);
+            Assert.AreEqual("9606", account.Metadata["number"]);
+        }
+
+        [TestMethod]
+        public async Task GetAuthAccountError()
+        {
+            IHttpClientWrapper httpClient = this.GetMockHttpClient("BadAccessToken.json", HttpStatusCode.Unauthorized, HttpMethod.Get, "auth/get");
+            IPlaidClient testClient = this.GetPlaidClient(httpClient);
+            PlaidResult<IList<Account>> result = await testClient.GetAuthAccountDataAsync(new AccessToken("test_bad"));
+
+            Assert.IsNotNull(result);
+            Assert.IsNull(result.Value);
+            Assert.IsTrue(result.IsError);
+
+            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual((int)HttpStatusCode.Unauthorized, result.Exception.HttpStatusCode);
+            Assert.AreEqual(ErrorCode.BadAccessToken, result.Exception.ErrorCode);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Exception.Message));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Exception.Resolution));
         }
     }
 }

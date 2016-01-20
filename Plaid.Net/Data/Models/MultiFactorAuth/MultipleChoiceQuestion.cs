@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@
     /// <remarks>
     /// Some institutions require the user to answer a question from a limited set of answers, i.e. multiple-choice.
     /// </remarks>
-    public class SelectionItem
+    public class MultipleChoiceQuestion
     {
         /// <summary>
         /// Gets or sets the possible answers.

@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +21,7 @@
         /// Some institutions require an MFA code that is sent to your email or phone. 
         /// If there are multiple potential delivery methods, the user may select which they'd like to use.
         /// </remarks>
-        public IList<CodeOption> CodeDeliveryOptions { get; set; }
+        public IList<CodeDeliveryOption> CodeDeliveryOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the device message for two-factor auth.
@@ -32,12 +32,12 @@
         public string DeviceMessage { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of multiple choice options for two-factor auth.
+        /// Gets or sets the list of multiple choice questions for two-factor auth.
         /// </summary>
         /// <remarks>
         /// Some institutions require the user to answer a question from a limited set of answers, i.e. multiple-choice.
         /// </remarks>
-        public IList<SelectionItem> SelectionOptions { get; set; }
+        public IList<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; }
 
         /// <summary>
         /// Gets or sets the security questions to answer for two-factor auth.

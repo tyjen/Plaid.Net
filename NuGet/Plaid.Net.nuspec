@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Plaid.Net</id>
+    <version>$version$</version>
+    <title>Plaid.Net</title>
+    <authors>Tyler Jensen</authors>
+    <projectUrl>https://github.com/tyjen/Plaid.Net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>C# Client for the Plaid API</description>
+    <copyright>Copyright 2016</copyright>
+  </metadata>
+</package>

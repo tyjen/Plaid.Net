@@ -1,11 +1,11 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// The mfa response contract.
@@ -60,7 +60,7 @@
             else if (authPrompt.AuthType == AuthType.Selection)
             {
                 IList<MfaSelectionResponse> selectionList = mfaArray?.ToObject<IList<MfaSelectionResponse>>();
-                authPrompt.SelectionOptions = selectionList?.Select(c => c.ToSelectionItem()).ToList();
+                authPrompt.MultipleChoiceQuestions = selectionList?.Select(c => c.ToSelectionItem()).ToList();
             }
 
             return authPrompt;

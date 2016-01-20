@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using Newtonsoft.Json;

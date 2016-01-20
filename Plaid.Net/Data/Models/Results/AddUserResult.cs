@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AddUserResponse.cs" company="">
-// </copyright>
-// <summary>
-//   The add user response.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
     using System.Collections.Generic;

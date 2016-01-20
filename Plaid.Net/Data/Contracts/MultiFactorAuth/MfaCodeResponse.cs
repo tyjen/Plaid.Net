@@ -1,12 +1,12 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// A response which specifies a device to send an auth code to.
-    /// Contract for <see cref="CodeOption"/>
+    /// Contract for <see cref="CodeDeliveryOption"/>
     /// </summary>
     /// <remarks>
     /// Some institutions require an MFA code that is sent to your email or phone.
@@ -28,12 +28,12 @@
         public string Type { get; set; }
 
         /// <summary>
-        /// Converts the contract into it's <see cref="CodeOption"/> model.
+        /// Converts the contract into it's <see cref="CodeDeliveryOption"/> model.
         /// </summary>
-        /// <returns>The <see cref="CodeOption"/> model.</returns>
-        public CodeOption ToCodeOption()
+        /// <returns>The <see cref="CodeDeliveryOption"/> model.</returns>
+        public CodeDeliveryOption ToCodeOption()
         {
-            return new CodeOption { Mask = this.Mask, Type = new DeliveryType(this.Type) };
+            return new CodeDeliveryOption { Mask = this.Mask, Type = new DeliveryType(this.Type) };
         }
     }
 }

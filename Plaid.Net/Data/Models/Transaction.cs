@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
     using System.Collections.Generic;

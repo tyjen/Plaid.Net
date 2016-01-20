@@ -2,7 +2,7 @@
 {
     using System;
     using System.Net;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// The plaid exception.

@@ -1,7 +1,7 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
-    using Tyjen.Net.Core.Identifiers;
+    using Plaid.Net.Utilities;
 
     /// <summary>
     /// Identifier for an access token which is used to identify a user.

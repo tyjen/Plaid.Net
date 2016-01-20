@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Data.Models
+﻿namespace Plaid.Net.Models
 {
     using System;
 
@@ -9,7 +9,7 @@
     /// Some institutions require an MFA code that is sent to your email or phone. 
     /// If there are multiple potential delivery methods, the user may select which they'd like to use.
     /// </remarks>
-    public class CodeOption
+    public class CodeDeliveryOption
     {
         /// <summary>
         /// Gets or sets the display mask.

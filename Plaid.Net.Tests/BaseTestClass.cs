@@ -7,7 +7,7 @@
     using System.Reflection;
     using System.Text;
     using Moq;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
     using Tyjen.Net.Http;
 
     /// <summary>

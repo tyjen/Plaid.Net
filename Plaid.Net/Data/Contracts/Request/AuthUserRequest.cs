@@ -1,8 +1,8 @@
-﻿namespace Plaid.Net.Data.Contracts.Request
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// Requests for the /connect/step api.

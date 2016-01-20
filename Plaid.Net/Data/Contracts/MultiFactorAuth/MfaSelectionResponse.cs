@@ -1,9 +1,9 @@
-﻿namespace Plaid.Net.Data.Contracts
+﻿namespace Plaid.Net.Contracts
 {
     using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Models;
+    using Plaid.Net.Models;
 
     /// <summary>
     /// Type of mfa response indicating the user should select the correct answer.
@@ -28,12 +28,12 @@
         public string Question { get; set; }
 
         /// <summary>
-        /// Converts this contract into its <see cref="SelectionItem"/> model.
+        /// Converts this contract into its <see cref="MultipleChoiceQuestion"/> model.
         /// </summary>
-        /// <returns>The <see cref="SelectionItem"/> model.</returns>
-        public SelectionItem ToSelectionItem()
+        /// <returns>The <see cref="MultipleChoiceQuestion"/> model.</returns>
+        public MultipleChoiceQuestion ToSelectionItem()
         {
-            return new SelectionItem { Options = new List<string>(this.Answers), Question = this.Question };
+            return new MultipleChoiceQuestion { Options = new List<string>(this.Answers), Question = this.Question };
         }
     }
 }

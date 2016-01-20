@@ -7,12 +7,13 @@
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using CuttingEdge.Conditions;
     using Newtonsoft.Json;
-    using Plaid.Net.Data.Contracts;
-    using Plaid.Net.Data.Contracts.Request;
-    using Plaid.Net.Data.Contracts.Response;
-    using Plaid.Net.Data.Models;
-    using Plaid.Net.Data.Models.Results;
+    using Plaid.Net.Contracts;
+    using Plaid.Net.Contracts;
+    using Plaid.Net.Contracts.Response;
+    using Plaid.Net.Models;
+    using Plaid.Net.Models.Results;
     using Tyjen.Net.Http;
 
     /// <summary>
@@ -44,10 +45,10 @@
         /// <param name="httpClient">The http client to use for requests.</param>
         public HttpPlaidClient(Uri serviceUri, string clientId, string clientSecret, IHttpClientWrapper httpClient)
         {
-            if (string.IsNullOrWhiteSpace(clientId)) throw new ArgumentNullException(nameof(clientId));
-            if (string.IsNullOrWhiteSpace(clientSecret)) throw new ArgumentNullException(nameof(clientSecret));
-            if (serviceUri == null) throw new ArgumentNullException(nameof(serviceUri));
-            if (httpClient == null) throw new ArgumentNullException(nameof(httpClient));
+            Condition.Requires(clientId).IsNotNullOrWhiteSpace();
+            Condition.Requires(clientSecret).IsNotNullOrWhiteSpace();
+            Condition.Requires(serviceUri).IsNotNull();
+            Condition.Requires(httpClient).IsNotNull();
 
             this.clientId = clientId;
             this.clientSecret = clientSecret;
@@ -67,12 +68,11 @@
         }
 
         /// <inheritdoc />
-        public async Task<AddUserResult> AddUserAsync(string username,string password, InstitutionType institution, AddUserOptions options = null,string pin = null)
+        public async Task<AddUserResult> AddUserAsync(string username,string password, InstitutionType institution, AddUserOptions options = null, string pin = null, ApiType api = ApiType.Connect)
         {
-            if (string.IsNullOrWhiteSpace(username)) throw new ArgumentNullException(nameof(username));
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
-            if (password == null) throw new ArgumentNullException(nameof(password));
-            if (institution == null) throw new ArgumentNullException(nameof(institution));
+            Condition.Requires(username).IsNotNullOrWhiteSpace();
+            Condition.Requires(password).IsNotNullOrWhiteSpace();
+            Condition.Requires(institution).IsNotNull();
 
             AddUserRequest userRequest = new AddUserRequest(this.clientId, this.clientSecret)
                 {
@@ -83,59 +83,60 @@
                     Pin = pin
                 };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("connect", userRequest);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync(GetEndpoint(api), userRequest);
             return await this.ProcessAddOrAuthResponse(response);
         }
 
         /// <inheritdoc />
-        public Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, DeliveryType deliveryType, bool isUpdate = false)
+        public Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, DeliveryType deliveryType, bool isUpdate = false, ApiType api = ApiType.Connect)
         {
-            if (deliveryType == null) throw new ArgumentNullException(nameof(deliveryType));
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
+            Condition.Requires(deliveryType).IsNotNull();
 
             AuthUserRequest authRequest = new AuthUserRequest(this.clientId, this.clientSecret, accessToken);
             authRequest.Options = new SendMethodRequest();
             authRequest.Options.SendMethod = new ExpandoObject();
             authRequest.Options.SendMethod.type = deliveryType.Value;
 
-            return this.AuthUserInternal(authRequest, isUpdate);
+            return this.AuthUserInternal(authRequest, api, isUpdate);
         }
 
         /// <inheritdoc />
-        public Task<AddUserResult> AuthenticateUserAsync(string deviceMask, AccessToken accessToken, bool isUpdate = false)
+        public Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, string deviceMask, bool isUpdate = false, ApiType api = ApiType.Connect)
         {
-            if (string.IsNullOrWhiteSpace(deviceMask)) throw new ArgumentNullException(nameof(deviceMask));
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
+            Condition.Requires(deviceMask).IsNotNullOrWhiteSpace();
 
             AuthUserRequest authRequest = new AuthUserRequest(this.clientId, this.clientSecret, accessToken);
             authRequest.Options = new SendMethodRequest();
             authRequest.Options.SendMethod = new ExpandoObject();
             authRequest.Options.SendMethod.mask = deviceMask;
 
-            return this.AuthUserInternal(authRequest, isUpdate);
+            return this.AuthUserInternal(authRequest, api, isUpdate);
         }
 
         /// <inheritdoc />
-        public Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, bool isUpdate = false, params string[] mfaValues)
+        public Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, bool isUpdate = false, ApiType api = ApiType.Connect, params string[] mfaValues)
         {
-            if (mfaValues == null || !mfaValues.Any()) throw new ArgumentNullException(nameof(mfaValues));
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
+            Condition.Requires(mfaValues).IsNotNull().IsNotEmpty();
 
             AuthUserRequest authRequest = new AuthUserRequest(this.clientId, this.clientSecret, accessToken);
 
             if (mfaValues.Length == 1) authRequest.MfaValue = mfaValues.FirstOrDefault();
             else authRequest.MfaValue = new List<string>(mfaValues);
 
-            return this.AuthUserInternal(authRequest, isUpdate);
+            return this.AuthUserInternal(authRequest, api, isUpdate);
         }
 
         /// <inheritdoc />
-        public async Task<PlaidResult<bool>> DeleteUserAsync(AccessToken accessToken)
+        public async Task<PlaidResult<bool>> DeleteUserAsync(AccessToken accessToken, ApiType api = ApiType.Connect)
         {
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
+
             PlaidRequest deleteRequest = new PlaidRequest(this.clientId, this.clientSecret, accessToken.Value);
 
-            HttpResponseMessage response = await this.httpClient.DeleteAsJsonAsync("connect", deleteRequest);
+            HttpResponseMessage response = await this.httpClient.DeleteAsJsonAsync(GetEndpoint(api), deleteRequest);
 
             PlaidResult<bool> result = new PlaidResult<bool>(response.StatusCode == HttpStatusCode.OK);
             result.Exception = await this.ParseException(response);
@@ -146,7 +147,7 @@
         /// <inheritdoc />
         public async Task<PlaidResult<IList<Account>>> GetAccountBalanceAsync(AccessToken accessToken)
         {
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
 
             PlaidRequest balanceRequest = new PlaidRequest(this.clientId, this.clientSecret, accessToken.Value);
             HttpResponseMessage response = await this.httpClient.GetAsJsonAsync("balance", balanceRequest);
@@ -182,7 +183,7 @@
         /// <inheritdoc />
         public async Task<PlaidResult<Category>> GetCategoryAsync(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentNullException(nameof(id));
+            Condition.Requires(id).IsNotNullOrWhiteSpace();
 
             HttpResponseMessage response = await this.httpClient.GetAsync("categories/" + id);
             string responseJson = await response.Content.ReadAsStringAsync();
@@ -201,7 +202,7 @@
         /// <inheritdoc />
         public async Task<PlaidResult<Institution>> GetInstitutionAsync(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentNullException(nameof(id));
+            Condition.Requires(id).IsNotNullOrWhiteSpace();
 
             HttpResponseMessage response = await this.httpClient.GetAsync("institutions/" + id);
             string responseJson = await response.Content.ReadAsStringAsync();
@@ -237,7 +238,8 @@
         /// <inheritdoc />
         public async Task<TransactionResult> GetTransactionsAsync(AccessToken accessToken, bool? includePending = null, string accountId = null, DateTimeOffset? greaterThanDate = null, DateTimeOffset? lessThanDate = null)
         {
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
+
             GetTransactionsRequest transactionRequest = new GetTransactionsRequest(this.clientId, this.clientSecret, accessToken.Value);
 
             if (includePending.HasValue || !string.IsNullOrWhiteSpace(accountId) || greaterThanDate.HasValue || lessThanDate.HasValue)
@@ -251,7 +253,7 @@
                     };
             }
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("connect/get", transactionRequest);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync(GetEndpoint(ApiType.Connect, "get"), transactionRequest);
             string responseJson = await response.Content.ReadAsStringAsync();
 
             TransactionResult result = new TransactionResult();
@@ -273,9 +275,9 @@
         }
 
         /// <inheritdoc />
-        public async Task<AddUserResult> UpdateUserAsync(AccessToken accessToken, string username, string password, string pin = null, Uri webhookUri = null)
+        public async Task<AddUserResult> UpdateUserAsync(AccessToken accessToken, string username, string password, string pin = null, Uri webhookUri = null, ApiType api = ApiType.Connect)
         {
-            if (accessToken == null) throw new ArgumentNullException(nameof(accessToken));
+            Condition.Requires(accessToken).IsNotNull();
             if ((string.IsNullOrWhiteSpace(username) || password == null) && webhookUri == null) throw new ArgumentException("Username/password required unless only updating webhookUri");
 
             UpdateUserRequest updateRequest = new UpdateUserRequest(this.clientId, this.clientSecret, accessToken.Value);
@@ -285,15 +287,15 @@
 
             if (webhookUri != null) updateRequest.Options = new UpdateUserRequestOptions { Webhook = webhookUri.ToString() };
 
-            HttpResponseMessage response = await this.httpClient.PatchAsJsonAsync("connect", updateRequest);
+            HttpResponseMessage response = await this.httpClient.PatchAsJsonAsync(GetEndpoint(api), updateRequest);
             return await this.ProcessAddOrAuthResponse(response);
         }
 
         /// <inheritdoc />
         public async Task<TokenExchangeResult> ExchangeBankTokenAsync(string publicToken, string accountId)
         {
-            if(string.IsNullOrWhiteSpace(publicToken)) throw new ArgumentNullException(nameof(publicToken));
-            if (string.IsNullOrWhiteSpace(accountId)) throw new ArgumentNullException(nameof(accountId));
+            Condition.Requires(publicToken).IsNotNullOrWhiteSpace();
+            Condition.Requires(accountId).IsNotNullOrWhiteSpace();
 
             ExchangeTokenRequest exchangeRequest = new ExchangeTokenRequest(this.clientId, this.clientSecret, publicToken, accountId);
             HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("exchange_token", exchangeRequest);
@@ -315,14 +317,66 @@
             return result;
         }
 
+        /// <inheritdoc />
+        public async Task<PlaidResult<IList<Account>>> GetAuthAccountDataAsync(AccessToken accessToken)
+        {
+            Condition.Requires(accessToken).IsNotNull();
+
+            PlaidRequest dataRequest = new PlaidRequest(this.clientId, this.clientSecret, accessToken.Value);
+            HttpResponseMessage response = await this.httpClient.GetAsJsonAsync(GetEndpoint(ApiType.Auth, "get"), dataRequest);
+            string responseJson = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                // Can re-use AddUserResponse since it has accounts, just ignore transactions
+                AddUserResponse dataResponse = JsonConvert.DeserializeObject<AddUserResponse>(responseJson);
+
+                return new PlaidResult<IList<Account>>(dataResponse?.Accounts?.Select(a => a.ToAccount()).ToList());
+            }
+
+            PlaidResult<IList<Account>> errorResult = new PlaidResult<IList<Account>>();
+            errorResult.Exception = await this.ParseException(response, responseJson);
+            return errorResult;
+        }
+
+        /// <summary>
+        /// Private helper to get the endpoint for an api.
+        /// </summary>
+        /// <example>
+        /// GetEndpoint(ApiType.Connect, "get") => "connect/get"
+        /// </example>
+        private static string GetEndpoint(ApiType api, string path)
+        {
+            string endpoint = HttpPlaidClient.GetEndpoint(api);
+            return $"{endpoint}/{path}";
+        }
+
+        /// <summary>
+        /// Private helper to get the endpoint for an api.
+        /// </summary>
+        private static string GetEndpoint(ApiType api)
+        {
+            switch (api)
+            {
+                case ApiType.Connect:
+                    return "connect";
+                case ApiType.Auth:
+                    return "auth";
+            }
+
+            throw new InvalidOperationException("Cannot get endpoint for unknown ApiType: " + api);
+        }
+
         /// <summary>
         /// Internal helper for user auth.
         /// </summary>
-        private async Task<AddUserResult> AuthUserInternal(AuthUserRequest request, bool isUpdate)
+        private async Task<AddUserResult> AuthUserInternal(AuthUserRequest request, ApiType api, bool isUpdate)
         {
+            string endpoint = GetEndpoint(api, "step");
+
             HttpResponseMessage response = isUpdate
-                                               ? await this.httpClient.PatchAsJsonAsync("connect/step", request)
-                                               : await this.httpClient.PostAsJsonAsync("connect/step", request);
+                                               ? await this.httpClient.PatchAsJsonAsync(endpoint, request)
+                                               : await this.httpClient.PostAsJsonAsync(endpoint, request);
 
             return await this.ProcessAddOrAuthResponse(response);
         }

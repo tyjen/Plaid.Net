@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Plaid.Net.Data.Models;
-    using Plaid.Net.Data.Models.Results;
+    using Plaid.Net.Models;
+    using Plaid.Net.Models.Results;
 
     /// <summary>
     /// The PlaidClient interface.
@@ -18,43 +18,48 @@
         /// <param name="password">Password associated with the user's financial institution.</param>
         /// <param name="institution">The banking institution to auth with.</param>
         /// <param name="options">Additional options for the request.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <param name="pin">(Usaa only) Pin number associated with the user's financial institution.</param>
         /// <returns>The <see cref="AddUserResult"/> containing the access token, multi-factor auth if required, or error details.</returns>
-        Task<AddUserResult> AddUserAsync(string username, string password, InstitutionType institution, AddUserOptions options = null, string pin = null);
+        Task<AddUserResult> AddUserAsync(string username, string password, InstitutionType institution, AddUserOptions options = null, string pin = null, ApiType api = ApiType.Connect);
 
         /// <summary>
         /// Two-factor authenticates a user based on previous calls to Add or Update user.
         /// </summary>
         /// <param name="deviceMask">The mask of the device to send the two-factor auth code to.</param>
         /// <param name="accessToken">The access token of the user to authenticate.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <param name="isUpdate">True if this auth is in response to <see cref="UpdateUserAsync"/>.</param>
         /// <returns>The <see cref="AddUserResult"/>.</returns>
-        Task<AddUserResult> AuthenticateUserAsync(string deviceMask, AccessToken accessToken, bool isUpdate = false);
+        Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, string deviceMask, bool isUpdate = false, ApiType api = ApiType.Connect);
 
         /// <summary>
         /// Two-factor authenticates a user based on previous calls to Add or Update user.
         /// </summary>
         /// <param name="accessToken">The access token of the user to authenticate.</param>
         /// <param name="deliveryType">The type of device to send the two-factor auth code to.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <param name="isUpdate">True if this auth is in response to <see cref="UpdateUserAsync"/>.</param>
         /// <returns>The <see cref="AddUserResult"/>.</returns>
-        Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, DeliveryType deliveryType, bool isUpdate = false);
+        Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, DeliveryType deliveryType, bool isUpdate = false, ApiType api = ApiType.Connect);
 
         /// <summary>
         /// Two-factor authenticates a user based on previous calls to Add or Update user.
         /// </summary>
         /// <param name="accessToken">The access token of the user to authenticate.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <param name="isUpdate">True if this auth is in response to <see cref="UpdateUserAsync"/>.</param>
         /// <param name="mfaValues">The value (answer(s)) provided by the user for two-factor auth.</param>
         /// <returns>The <see cref="AddUserResult"/>.</returns>
-        Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, bool isUpdate = false, params string[] mfaValues);
+        Task<AddUserResult> AuthenticateUserAsync(AccessToken accessToken, bool isUpdate = false, ApiType api = ApiType.Connect, params string[] mfaValues);
 
         /// <summary>
         /// Removes a user from Plaid's system.
         /// </summary>
         /// <param name="accessToken">The access token of the user to remove.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <returns>True if the user was successfully removed, false otherwise.</returns>
-        Task<PlaidResult<bool>> DeleteUserAsync(AccessToken accessToken);
+        Task<PlaidResult<bool>> DeleteUserAsync(AccessToken accessToken, ApiType api = ApiType.Connect);
 
         /// <summary>
         /// Gets account balances for the given user.
@@ -107,10 +112,11 @@
         /// <param name="accessToken">The access token of the user being updated.</param>
         /// <param name="username">Username associated with the user's financial institution.</param>
         /// <param name="password">Password associated with the user's financial institution.</param>
+        /// <param name="api">Which API endpoint to use.</param>
         /// <param name="pin">Pin number associated with the user's financial institution.</param>
         /// <param name="webhookUri">The updated webhook uri.</param>
         /// <returns>Async <see cref="Task"/>.</returns>
-        Task<AddUserResult> UpdateUserAsync(AccessToken accessToken, string username, string password, string pin = null, Uri webhookUri = null);
+        Task<AddUserResult> UpdateUserAsync(AccessToken accessToken, string username, string password, string pin = null, Uri webhookUri = null, ApiType api = ApiType.Connect);
 
         /// <summary>
         /// Exchanges a public token and account id for an <see cref="AccessToken"/> and bank account token.
@@ -123,5 +129,11 @@
         /// <param name="accountId">The account identifier from Plaid Link.</param>
         /// <returns>The <see cref="TokenExchangeResult"/> from the operation.</returns>
         Task<TokenExchangeResult> ExchangeBankTokenAsync(string publicToken, string accountId);
+
+        /// <summary>
+        /// Gets the user's account and routing information.
+        /// </summary>
+        /// <param name="accessToken">The access token of the user to get data for.</param>
+        Task<PlaidResult<IList<Account>>> GetAuthAccountDataAsync(AccessToken accessToken);
     }
 }

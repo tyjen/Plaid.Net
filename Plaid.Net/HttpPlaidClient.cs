@@ -10,11 +10,9 @@
     using CuttingEdge.Conditions;
     using Newtonsoft.Json;
     using Plaid.Net.Contracts;
-    using Plaid.Net.Contracts;
     using Plaid.Net.Contracts.Response;
     using Plaid.Net.Models;
-    using Plaid.Net.Models.Results;
-    using Tyjen.Net.Http;
+    using Plaid.Net.Utilities;
 
     /// <summary>
     /// The RESTFUL Http Plaid client.
@@ -43,7 +41,7 @@
         /// <param name="clientId">The client id provided by Plaid.</param>
         /// <param name="clientSecret">The client secret provided by Plaid.</param>
         /// <param name="httpClient">The http client to use for requests.</param>
-        public HttpPlaidClient(Uri serviceUri, string clientId, string clientSecret, IHttpClientWrapper httpClient)
+        internal HttpPlaidClient(Uri serviceUri, string clientId, string clientSecret, IHttpClientWrapper httpClient)
         {
             Condition.Requires(clientId).IsNotNullOrWhiteSpace();
             Condition.Requires(clientSecret).IsNotNullOrWhiteSpace();

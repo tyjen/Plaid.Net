@@ -7,7 +7,7 @@
     <authors>Tyler Jensen</authors>
     <projectUrl>https://github.com/tyjen/Plaid.Net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>C# Client for the Plaid API</description>
+    <description>$description$</description>
     <copyright>Copyright 2016</copyright>
   </metadata>
 </package>

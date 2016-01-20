@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Plaid.Net.Models;
-    using Plaid.Net.Models.Results;
 
     /// <summary>
     /// The PlaidClient interface.

@@ -8,7 +8,7 @@
     using System.Text;
     using Moq;
     using Plaid.Net.Models;
-    using Tyjen.Net.Http;
+    using Plaid.Net.Utilities;
 
     /// <summary>
     /// The base test class.
@@ -67,7 +67,7 @@
             return response;
         }
 
-        public IHttpClientWrapper GetMockHttpClient(string responseFileName, HttpStatusCode statusCode, HttpMethod method, string path = "connect")
+        internal IHttpClientWrapper GetMockHttpClient(string responseFileName, HttpStatusCode statusCode, HttpMethod method, string path = "connect")
         {
             Mock<IHttpClientWrapper> mockHttpClient = new Mock<IHttpClientWrapper>();
 
@@ -105,7 +105,7 @@
         /// <summary>
         /// Gets the plaid client with test credentials and sandbox server url.
         /// </summary>
-        public IPlaidClient GetPlaidClient(IHttpClientWrapper httpClient)
+        internal IPlaidClient GetPlaidClient(IHttpClientWrapper httpClient)
         {
             return new HttpPlaidClient(BaseTestClass.TestServer, BaseTestClass.TestClientId, BaseTestClass.TestSecret, httpClient);
         }

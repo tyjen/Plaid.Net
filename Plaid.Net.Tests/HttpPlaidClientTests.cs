@@ -8,8 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using Plaid.Net.Models;
-    using Plaid.Net.Models.Results;
-    using Tyjen.Net.Http;
+    using Plaid.Net.Utilities;
 
     /// <summary>
     /// Tests for <see cref="HttpPlaidClient"/>

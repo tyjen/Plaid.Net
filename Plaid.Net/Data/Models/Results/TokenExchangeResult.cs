@@ -1,4 +1,4 @@
-﻿namespace Plaid.Net.Models.Results
+﻿namespace Plaid.Net.Models
 {
     using System;
 

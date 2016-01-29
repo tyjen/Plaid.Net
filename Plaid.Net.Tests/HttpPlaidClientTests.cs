@@ -678,7 +678,7 @@
         [TestMethod]
         public async Task GetAuthAccountSuccess()
         {
-            IHttpClientWrapper httpClient = this.GetMockHttpClient("AuthUserUsBank.json", HttpStatusCode.OK, HttpMethod.Get, "auth/get");
+            IHttpClientWrapper httpClient = this.GetMockHttpClient("AuthUserUsBank.json", HttpStatusCode.OK, HttpMethod.Post, "auth/get");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
 
             PlaidResult<IList<Account>> result = await testClient.GetAuthAccountDataAsync(new AccessToken("test_wells"));
@@ -706,7 +706,7 @@
         [TestMethod]
         public async Task GetAuthAccountError()
         {
-            IHttpClientWrapper httpClient = this.GetMockHttpClient("BadAccessToken.json", HttpStatusCode.Unauthorized, HttpMethod.Get, "auth/get");
+            IHttpClientWrapper httpClient = this.GetMockHttpClient("BadAccessToken.json", HttpStatusCode.Unauthorized, HttpMethod.Post, "auth/get");
             IPlaidClient testClient = this.GetPlaidClient(httpClient);
             PlaidResult<IList<Account>> result = await testClient.GetAuthAccountDataAsync(new AccessToken("test_bad"));
 

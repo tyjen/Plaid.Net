@@ -321,7 +321,7 @@
             Condition.Requires(accessToken).IsNotNull();
 
             PlaidRequest dataRequest = new PlaidRequest(this.clientId, this.clientSecret, accessToken.Value);
-            HttpResponseMessage response = await this.httpClient.GetAsJsonAsync(GetEndpoint(ApiType.Auth, "get"), dataRequest);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync(GetEndpoint(ApiType.Auth, "get"), dataRequest);
             string responseJson = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode == HttpStatusCode.OK)

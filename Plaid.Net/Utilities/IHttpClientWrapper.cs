@@ -75,13 +75,6 @@
         /// </summary>
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<HttpResponseMessage> GetAsJsonAsync<T>(string requestUri, T value);
-
-        /// <summary>
-        /// Wraps <see cref="HttpClient.GetAsync"/>
-        /// </summary>
-        /// <param name="requestUri">The Uri the request is sent to.</param>
-        /// <returns>The task object representing the asynchronous operation.</returns>
         Task<HttpResponseMessage> GetAsync(Uri requestUri);
 
         /// <summary>

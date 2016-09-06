@@ -78,9 +78,6 @@
                                   .ReturnsAsync(this.GetMockResponse(responseFileName, statusCode));
                     break;
                 case "GET":
-                    mockHttpClient.Setup(h => h.GetAsJsonAsync(path, It.IsNotNull<object>()))
-                                  .ReturnsAsync(this.GetMockResponse(responseFileName, statusCode));
-
                     mockHttpClient.Setup(h => h.GetAsync(path))
                                   .ReturnsAsync(this.GetMockResponse(responseFileName, statusCode));
                     break;

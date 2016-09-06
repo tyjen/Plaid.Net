@@ -143,12 +143,12 @@
         }
 
         /// <inheritdoc />
-        public async Task<PlaidResult<IList<Account>>> GetAccountBalanceAsync(AccessToken accessToken)
+        public async Task<PlaidResult<IList<Account>>> GetAccountsAsync(AccessToken accessToken)
         {
             Condition.Requires(accessToken).IsNotNull();
 
             PlaidRequest balanceRequest = new PlaidRequest(this.clientId, this.clientSecret, accessToken.Value);
-            HttpResponseMessage response = await this.httpClient.GetAsJsonAsync("balance", balanceRequest);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("balance", balanceRequest);
 
             // Re-use add user result since it contains the account objects of interest
             AddUserResult userResult = await this.ProcessAddOrAuthResponse(response);

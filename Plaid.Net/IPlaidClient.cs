@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="accessToken">The access token of the user to get balances for.</param>
         /// <returns>Async <see cref="Task"/>.</returns>
-        Task<PlaidResult<IList<Account>>> GetAccountBalanceAsync(AccessToken accessToken);
+        Task<PlaidResult<IList<Account>>> GetAccountsAsync(AccessToken accessToken);
 
         /// <summary>
         /// Gets a list of detailed category information.

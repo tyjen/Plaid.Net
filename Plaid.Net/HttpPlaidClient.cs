@@ -293,7 +293,6 @@
         public async Task<TokenExchangeResult> ExchangeBankTokenAsync(string publicToken, string accountId)
         {
             Condition.Requires(publicToken).IsNotNullOrWhiteSpace();
-            Condition.Requires(accountId).IsNotNullOrWhiteSpace();
 
             ExchangeTokenRequest exchangeRequest = new ExchangeTokenRequest(this.clientId, this.clientSecret, publicToken, accountId);
             HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("exchange_token", exchangeRequest);
